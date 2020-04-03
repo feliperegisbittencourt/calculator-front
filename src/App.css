@@ -7,6 +7,28 @@
   pointer-events: none;
 }
 
+.view {
+  background-color: #d3d3d3;
+  border: 3px solid #000000;
+  color: #ffffff;
+  width: 75vw;
+  height: 20vh;
+  margin-top: 1vh;
+}
+
+.buttons{
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-row-gap: 0em;
+  height: 75vh;
+}
+
+.btn{
+  border: 1px solid #d3d3d3;
+  background-color: cadetblue;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -19,7 +41,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
 }
