@@ -8,7 +8,7 @@
 }
 
 .view {
-  background-color: #d3d3d3;
+  background-color: #d1d1d1;
   border: 3px solid #000000;
   color: #ffffff;
   width: 75vw;
@@ -16,17 +16,71 @@
   margin-top: 1vh;
 }
 
+.button{
+  background-color: #bdbdbd;
+  border-width: 2px;
+  border-style: outset;
+  border-color: #d3d3d3;
+  border-image: initial;
+}
+
+.button:active{
+  border-color: #bdbdbd;
+}
+
+
+.numbers{
+  background-color: #494C53;
+  color: #ffffff;
+  border-width: 2px;
+  border-style: outset;
+  border-color: #626f78;
+  border-image: initial;
+}
+
+.numbers:active{
+  border-color: #494C53;
+}
+
+.operators{
+  background-color: darkcyan;
+  border-width: 2px;
+  border-style: outset;
+  border-color: #00a5a5;
+  border-image: initial;
+}
+
+.operators:active{
+  border-color: darkcyan;
+}
+*:focus {
+  outline: 0 !important;
+}
+
 .buttons{
   display: grid;
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-row-gap: 0em;
-  height: 75vh;
+  height: 45vh;
+}
+
+.finalgrid{
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 2fr 1fr 1fr;
+  height: 15vh;
+}
+
+.specialButtons{
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  grid-template-rows: 1fr;
+  height: 15vh;
 }
 
 .btn{
-  border: 1px solid #d3d3d3;
-  background-color: cadetblue;
+  grid-column: 2;
 }
 
 @media (prefers-reduced-motion: no-preference) {

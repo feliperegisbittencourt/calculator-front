@@ -1,81 +1,101 @@
 import React, { useState } from 'react';
 import './App.css';
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { fab } from '@fortawesome/free-brands-svg-icons'
-import { faCheckSquare, faCoffee, faBackspace } from '@fortawesome/free-solid-svg-icons'
+import { faDivide, faTimes, faMinus, faPlus, faEquals } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { ReactDom } from 'react-dom'
 
-library.add(fab, faCheckSquare, faCoffee, faBackspace)
+library.add(faDivide, faTimes, faMinus, faPlus, faEquals)
 
 
 function App() {
 
   var request = new XMLHttpRequest();
-  var url = "http://127.0.0.1:8000/report";
+  var urlget = "http://127.0.0.1:8000/report";
+  var urlpost = "http://127.0.0.1:800/report?s5!qts7^bsba8-ds#s2o94!=jc8a==+uux)k8n6*_%ih=+ko)q"
   var data = {};
   
   const[numbers, setNumbers] = useState([]);
+  const[operators, setOperator] = useState([]);
+  const[view, setView] = useState([]);
+  const[numAux, setAux] = useState([]);
+
+  const axios = require('axios').default;
   
   function write(number){
-    let copyNumbers = numbers.slice();
-    if(copyNumbers[0] == "Não é possível dividir por zero"){
-      copyNumbers.pop();
+    let copyAux = numAux.slice();
+    copyAux.push(number);
+    setAux(copyAux);
+    //console.log(copyAux);
+    let copyView = view.slice();
+    if(copyView[0] === "Não é possível dividir por zero"){
+      copyView.pop();
     }
-    copyNumbers.push(number);
-    setNumbers(copyNumbers);
-  }
-  
-
-  function erase(){
-    let copyNumbers = numbers.slice();
-    copyNumbers.pop();
-    setNumbers(copyNumbers);
-  }
-
-  function square(){
-    write('√');
+    copyView.push(number);
+    setView(copyView);
 
   }
 
-  function squared(){
-    write('²');
-  }
-
-  function percent(){
-    write('%');
-  }
-
-  function oneDivide(){
-    let copyNumbers = numbers.slice();
-    if(copyNumbers.length == 0 || copyNumbers[0] == 0 && copyNumbers.length == 1){
-      copyNumbers.pop();
-      copyNumbers.push("Não é possível dividir por zero");
+  function writeOperador(operator){
+    let aux = "";
+    let copyAux = numAux.slice();
+    console.log(copyAux);
+    if(copyAux.length === 0 && operator === "-"){
+      write('-');
+    }else if (copyAux.length !== 0){
+      for(var i = 0; i < copyAux.length; i++){
+        aux += copyAux[i].toString();
+        console.log(copyAux[i]);
+      }
+      //aux = (copyAux[0]).toString() + (copyAux[1]).toString();
+      console.log(aux);
+      let copyNumbers = numbers.slice();
+      copyNumbers.push(aux);
+      console.log('copyNumbers >>>',copyNumbers);
+      setNumbers(copyNumbers);
+      console.log('numbers >>>', numbers);
+      numbers.push(aux);
+      setAux([]);
+      let copyView = view.slice();
+      copyView.push(operator);
+      setView(copyView);
+      let copyOperators = operators.slice();
+      copyOperators.push(operator);
+      setOperator(copyOperators);
     }else{
-      copyNumbers.unshift('1/(')
-      copyNumbers.push(')');
-      
+
+      console.log(aux);
+      let copyNumbers = numbers.slice();
+      copyNumbers.push(aux);
+      console.log('copyNumbers >>>',copyNumbers);
+      setNumbers(copyNumbers);
+      console.log('numbers >>>', numbers);
+      setAux([]);
+      let copyView = view.slice();
+      copyView.push(operator);
+      setView(copyView);
+      let copyOperators = operators.slice();
+      copyOperators.push(operator);
+      setOperator(copyOperators);
     }
-    setNumbers(copyNumbers);
   }
 
   function clear(){
+    setView([]);
     setNumbers([]);
+    setOperator([]);
+    setAux([]);
   }
 
-  
 
-  function send(){
-    data = (JSON.stringify({"numbers":numbers,"operators_mat":["+","-","/"]}));
-    console.log(data);
-    request.open('POST', url, true);
-    request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8;');
-    request.setRequestHeader('Accept', 'application/json');
-    request.setRequestHeader('Authorization', 'authkey');
-    request.setRequestHeader('Access-Control-Allow-Origin', '*');
-    request.setRequestHeader('Access-Control-Allow-Credentials', 'true');
-    console.log(request);
-    request.send(data);
+  async function send(){
+    writeOperador("");
+    data = {"numbers": numbers,"operators": operators};
+
+    axios.post(urlget, data).then(
+      function(response){
+        write(response.data.result);
+      }
+    );
 
   }
 
@@ -85,34 +105,32 @@ function App() {
       <header className="App-header">
         <div className="calculator">
           <div className="view">
-            <h3>{numbers}</h3>
+            <h3>{view}</h3>
           </div>
-          <div className="buttons">
-            <button onClick={() => percent()}>%</button>
-            <button onClick={() => clear()}>CE</button>
-            <button onClick={() => clear()}>C</button>
-            <button onClick={() => erase()}><FontAwesomeIcon icon={faBackspace} /></button>
-            <button onClick={() => oneDivide()}><sup>1</sup>/<sub>x</sub></button>
-            <button onClick={() => squared()}>x<sup>2</sup></button>
-            <button onClick={() => square()}><sup>2</sup>√x
-            </button>
-            <button onClick={() => write('/')}>/</button>
-            <button onClick={() => write(7)}>7</button>
-            <button onClick={() => write(8)}>8</button>
-            <button onClick={() => write(9)}>9</button>
-            <button onClick={() => write('*')}>X</button>
-            <button onClick={() => write(4)}>4</button>
-            <button onClick={() => write(5)}>5</button>
-            <button onClick={() => write(6)}>6</button>
-            <button onClick={() => write('-')}>-</button>
-            <button onClick={() => write(1)}>1</button>
-            <button onClick={() => write(2)}>2</button>
-            <button onClick={() => write(3)}>3</button>
-            <button onClick={() => write('+')}>+</button>
-            <button onClick={() => write('*(-1)')}><sup>+</sup>/<sub>-</sub></button>
-            <button onClick={() => write(0)}>0</button>
-            <button onClick={() => write('.')}>,</button>
-            <button onClick={() => send()}>=</button>
+          <div>
+            <div className="specialButtons">
+              <button className="button" onClick={() => clear()}>C</button>
+              <button className="operators" onClick={() => writeOperador('/')}><FontAwesomeIcon icon={"divide"}/></button>
+            </div>
+            <div className="buttons">
+              <button className="numbers" onClick={() => write(7)}>7</button>
+              <button className="numbers" onClick={() => write(8)}>8</button>
+              <button className="numbers" onClick={() => write(9)}>9</button>
+              <button className="operators" onClick={() => writeOperador('*')}><FontAwesomeIcon icon={"times"}/></button>
+              <button className="numbers" onClick={() => write(4)}>4</button>
+              <button className="numbers" onClick={() => write(5)}>5</button>
+              <button className="numbers" onClick={() => write(6)}>6</button>
+              <button className="operators" onClick={() => writeOperador('-')}><FontAwesomeIcon icon={"minus"}/></button>
+              <button className="numbers" onClick={() => write(1)}>1</button>
+              <button className="numbers" onClick={() => write(2)}>2</button>
+              <button className="numbers" onClick={() => write(3)}>3</button>
+              <button className="operators" onClick={() => writeOperador('+')}><FontAwesomeIcon icon={"plus"}/></button>
+            </div>
+            <div className="finalgrid">
+              <button className="numbers" onClick={() => write(0)}>0</button>
+              <button className="numbers" onClick={() => write('.')}>,</button>
+              <button className="operators" onClick={() => send()}><FontAwesomeIcon icon={"equals"}/></button>
+            </div>
           </div>
         </div>
       </header>
